@@ -1,0 +1,48 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    {% if isAdmin == 1 %}
+    
+    <form action="/super_secret_url_unavailable_for_mere_mortals">
+        <input type='submit' value="Widok użytkowników"> 
+    </form>
+
+    {% endif %}
+    <form action="/logout">
+        <input type='submit' value="Wyloguj"> 
+    </form>
+    {% if message is defined %}
+    <h1 style="color:red;">{{message}}</h1>
+    {% endif %}
+    <h1>
+        Książki
+    </h1>
+
+    <table>
+        <thead>
+           <td>Tytuł</td>
+        </thead>
+        
+        {% for ksiazka in ksiazki %}
+           <tr>
+              <td>{{ksiazka[0]}}</td>
+           </tr>
+        {% endfor %}
+     </table>
+
+    <h1>
+        Dodaj książke
+    </h1>
+    {% if data is defined %}
+    <h2> {{data}} </h2>
+    {% endif %}
+    <form method=post action="/">
+        Tytuł książki: <input type=text name=title>
+        <input type=submit>
+    </form>
+</body>
+
+</html>
