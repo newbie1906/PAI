@@ -1,0 +1,21 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <h1>
+        Wpisz dane logowania
+    </h1>
+    {% if data is defined %}
+    <h2> {{data}} </h2>
+    {% endif %}
+    <form method=post action="/login">
+        Login: <input type=text name=username>
+        Password: <input type=password name=password>
+        <input type=submit>
+    </form>
+</body>
+
+<h4> Nie masz konta? Serdecznie zapraszam <a href='/register'>tutaj</a> aby założyć konto</h4>
+</html>
