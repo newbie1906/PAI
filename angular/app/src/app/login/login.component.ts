@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit {
               // Zapisanie informacji o tym, że udało się zalogować użytkownika oraz jego dane
               this.httpService.isLogin = true;
               this.httpService.user = new User(responseData.user_id, responseData.user_name, "");
+              console.log(responseData.user_id, responseData.user_name)
               this.router.navigate(['/']);
             } else {
               this.loading = false;
