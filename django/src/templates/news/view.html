@@ -1,0 +1,9 @@
+<ul>Tytuł: {{ news.topic }}</ul>
+<ul>Autor: {{ news.author }}</ul>
+<ul>Treść: {{ news.text }}</ul>
+<ul>Czas stworzenia: {{ news.create_time }}</ul>
+<ul>Czas ostatniej aktualizacji: {{ news.last_edit_time }}</ul>
+
+{% if user.is_authenticated %}
+<a href="{% url 'update' news.id %}"> Aktualizuj</a>
+{% endif %}
