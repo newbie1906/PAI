@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'grzyby.apps.GrzybyConfig',
     'news.apps.NewsConfig',
     'authentication.apps.AuthenticationConfig',
     'django.contrib.admin',
