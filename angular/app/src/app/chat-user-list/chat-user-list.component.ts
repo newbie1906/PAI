@@ -10,6 +10,7 @@ export class ChatUserListComponent implements OnInit {
 
   // Dane wejściowe komponentu - lista uzytkownikow
   @Input() users: User[] = [];
+  isInited : boolean = false;
 
   // Dane wyjsciowe z komponentu - zdarzenie wywoływane po naciśnieciu uzytkownika
   @Output() userClicked: EventEmitter<User> = new EventEmitter();
@@ -17,6 +18,7 @@ export class ChatUserListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
+    console.log(this.users)
+    this.isInited = true;
   }
 }

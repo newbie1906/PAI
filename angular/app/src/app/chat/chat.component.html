@@ -2,7 +2,7 @@
     <!-- TODO: Dodaj wywołanie funkcji  userSelected podczas przyjścia 
         zdarzenia z komponentu app-chat-user-list-->
 
-    <app-chat-user-list [users]="users" (userClicked)="userClicked($event)">
+    <app-chat-user-list *ngIf="users.length>0" [users]="users" (userClicked)="userSelected($event)">
     </app-chat-user-list>
 
 
@@ -11,20 +11,21 @@
 
     <ng-container *ngIf="selectedUser">
         <!-- TODO: Dodaj binding wiadomości do użytkownika -->
-        <app-chat-message-list [myId]="getMyId()"></app-chat-message-list>
+        <app-chat-message-list [myId]="getMyId()" [messages]="messagesToUser"></app-chat-message-list>
 
         <app-chat-new-message-area (sendButtonClicked)="sendMessage($event)"></app-chat-new-message-area>
     </ng-container>
 
-    <ng-container *ngIf="!selectedUser">
+    <ng-container *ngIf="!selectedUser.user_name">
       Please select user
     </ng-container>
 
 
-    <ng-container *ngIf="selectedUser">
-      <p>{{selectedUser.user_name + " - " +selectedUser.user_id}}</p>
-
-      <br />
+    <ng-container *ngIf="selectedUser.user_name">
+      <p>
+        {{selectedUser.user_name}}
+      </p>
+      {{selectedUser.user_id}}
       <!-- TODO: wyswietlenie id wybranego użytkownika -->
 
     </ng-container>

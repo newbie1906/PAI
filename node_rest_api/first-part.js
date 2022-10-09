@@ -116,7 +116,8 @@ function login(request, response) {
             console.log(row[0].user_id);
             request.session.user_name = row[0].user_name;
             request.session.loggedin = true;
-            response.send({loggedin: request.session.loggedin });
+            response.send({loggedin: request.session.loggedin, user_id: request.session.user_id,
+            user_name: request.session.user_name });
         }
         else{
             request.session.loggedin = false;
@@ -148,17 +149,18 @@ function checkSessions(request, response, next) {
 }
 
 function getUsers(request, response) {
-    console.log(request.session)
-    const usersList = {};
+    const usersList = [];
     const users =  User.findAll().then((users => {
         users.forEach(element => {
+            const oneUser = {user_id:element.dataValues.user_id,user_name:element.dataValues.user_name};
             if(onlineUsers[element.user_id]){
-            usersList[element.user_name]='online'
+            oneUser.online = true;
             }else{
-                usersList[element.user_name]='offline'
+            oneUser.online = false;
             }
+            usersList.push(oneUser);
         });
-        response.send({ data: [usersList] });
+        response.send({ data: usersList });
     }));
 }
 

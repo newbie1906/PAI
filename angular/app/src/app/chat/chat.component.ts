@@ -92,8 +92,5 @@ export class ChatComponent {
       }
     });
   }
-  userClicked(e: User){
-    console.log(e);
-  }
 
 }
