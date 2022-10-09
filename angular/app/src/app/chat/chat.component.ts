@@ -37,9 +37,11 @@ export class ChatComponent {
   ngOnInit() {
     this.messageWSService.onAnotherUserConneted.subscribe(()=>{
       this.reloadUsers();
+      console.log("RELOAD UZYTKOWNIKOW")
     });
     this.messageWSService.onMessage.subscribe(() =>{
       this.getMessagesWithSelectedUser();
+      console.log("WIADOMOSCI?")
     });
     this.reloadUsers();
   }

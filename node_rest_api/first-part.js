@@ -12,6 +12,7 @@ const cors = require('cors');
 // dołączenie modułu obsługi sesji
 var session = require('express-session');
 const e = require('express');
+const { or } = require('sequelize');
 
 //Inicjalizacja aplikacji
 var app             = express();
@@ -171,7 +172,16 @@ function getMessages(request, response){
     //const message = [{"message_text": []}]
     
     const message = [];
-    const messages = Message.findAll({where:{message_from_user_id:user_id, message_to_user_id: target_id}, raw:true}).then(( row ) => {
+    const messages = Message.findAll({
+        where:
+        {
+            [Sequelize.Op.or]:
+            [
+                {message_from_user_id:user_id,message_to_user_id:target_id},
+                {message_from_user_id:target_id,message_to_user_id:user_id}
+            ]
+        },
+         raw:true}).then(( row ) => {
         row.forEach(element => {
             const allMessages = {message_text: element.message_text}
             message.push(allMessages);
@@ -201,13 +211,13 @@ function sendMessages(request, response) {
                         {
                             if (user.user_id in onlineUsers) {
                                 // Wysyłanie wiadomości do odiorcy
-                                onlineUsers[user.user_id].send(JSON.stringify(mes.message_text));
+                                onlineUsers[user.user_id].send(JSON.stringify({data:mes.message_text,status:1}));
 
                             }
                             if (mes.message_from_user_id !== mes.message_to_user_id) {
                                 if (mes.message_from_user_id in onlineUsers) {
                                      // Wysyłanie wiadomości do nadawcy jeżeli odbiorca nie jest nadawca
-                                     onlineUsers[user.user_id].send(JSON.stringify(mes.message_text));
+                                     onlineUsers[mes.message_from_user_id].send(JSON.stringify({data:mes.message_text,status:1}));
                                 }
                             }
 
