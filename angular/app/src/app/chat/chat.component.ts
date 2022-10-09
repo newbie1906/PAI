@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpService } from '../http.service';
 import { User } from '../user';
 import { Message } from '../message';
+import { DataApiResponse } from '../api-response';
 
 @Component({
   selector: 'app-chat',
@@ -43,7 +44,7 @@ export class ChatComponent {
 
   // Funkcja wysyłająca wiadomość
   sendMessage(e: string) {
-    this.httpService.sendMessages(new Message()).subscribe({
+    this.httpService.sendMessages(new Message(this.getMyId(),this.selectedUser.user_id,e)).subscribe({
       next: (data) => {
         console.log("ChatComponent, onSubmit:", data);
       },
@@ -90,6 +91,9 @@ export class ChatComponent {
       error: (error) => {
       }
     });
+  }
+  userClicked(e: User){
+    console.log(e);
   }
 
 }
