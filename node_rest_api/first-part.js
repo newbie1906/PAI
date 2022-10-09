@@ -12,6 +12,7 @@ const cors = require('cors');
 // dołączenie modułu obsługi sesji
 var session = require('express-session');
 const e = require('express');
+const { or } = require('sequelize');
 
 //Inicjalizacja aplikacji
 var app             = express();
@@ -116,7 +117,8 @@ function login(request, response) {
             console.log(row[0].user_id);
             request.session.user_name = row[0].user_name;
             request.session.loggedin = true;
-            response.send({loggedin: request.session.loggedin });
+            response.send({loggedin: request.session.loggedin, user_id: request.session.user_id,
+            user_name: request.session.user_name });
         }
         else{
             request.session.loggedin = false;
@@ -148,29 +150,45 @@ function checkSessions(request, response, next) {
 }
 
 function getUsers(request, response) {
-    console.log(request.session)
-    const usersList = {};
+    const usersList = [];
     const users =  User.findAll().then((users => {
         users.forEach(element => {
+            const oneUser = {user_id:element.dataValues.user_id,user_name:element.dataValues.user_name};
             if(onlineUsers[element.user_id]){
-            usersList[element.user_name]='online'
+            oneUser.online = true;
             }else{
-                usersList[element.user_name]='offline'
+            oneUser.online = false;
             }
+            usersList.push(oneUser);
         });
-        response.send({ data: [usersList] });
+        response.send({ data: usersList });
     }));
 }
 
 function getMessages(request, response){
     const user_id = request.session.user_id;
     const target_id = request.params.id;
-    const message_list = [];
-    const messages = Message.findAll({where:{message_from_user_id:user_id, message_to_user_id: target_id}, raw:true}).then(( row ) => {
+    
+    //const message = [{"message_text": []}]
+    
+    const message = [];
+    const messages = Message.findAll({
+        where:
+        {
+            [Sequelize.Op.or]:
+            [
+                {message_from_user_id:user_id,message_to_user_id:target_id},
+                {message_from_user_id:target_id,message_to_user_id:user_id}
+            ]
+        },
+         raw:true}).then(( row ) => {
         row.forEach(element => {
-            message_list.push(element.message_text);
+            const allMessages = {message_text: element.message_text}
+            message.push(allMessages);
+            
+            //message[0]['message_text'].push(element.message_text);
         })
-        response.send({data: message_list});
+        response.send({data: message});
     }) 
 }
 
@@ -193,13 +211,13 @@ function sendMessages(request, response) {
                         {
                             if (user.user_id in onlineUsers) {
                                 // Wysyłanie wiadomości do odiorcy
-                                onlineUsers[user.user_id].send(JSON.stringify(mes.message_text));
+                                onlineUsers[user.user_id].send(JSON.stringify({data:mes.message_text,status:1}));
 
                             }
                             if (mes.message_from_user_id !== mes.message_to_user_id) {
                                 if (mes.message_from_user_id in onlineUsers) {
                                      // Wysyłanie wiadomości do nadawcy jeżeli odbiorca nie jest nadawca
-                                     onlineUsers[user.user_id].send(JSON.stringify(mes.message_text));
+                                     onlineUsers[mes.message_from_user_id].send(JSON.stringify({data:mes.message_text,status:1}));
                                 }
                             }
 

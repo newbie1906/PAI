@@ -1,0 +1,6 @@
+<!-- Wyświetlenie listy użytkowników-->
+<ng-container *ngIf="isInited">
+<div *ngFor="let user of users" (click)="userClicked.emit(user)">
+    {{user.user_id}} {{user.user_name}} {{user.online}}
+</div>
+</ng-container>

@@ -1,0 +1,32 @@
+
+    <!-- TODO: Dodaj wywołanie funkcji  userSelected podczas przyjścia 
+        zdarzenia z komponentu app-chat-user-list-->
+
+    <app-chat-user-list *ngIf="users.length>0" [users]="users" (userClicked)="userSelected($event)">
+    </app-chat-user-list>
+
+
+    <!-- ng-container - jest to tag umożliwiający użycie if'a oraz for'a angularowego
+         bez dodawania dodatkowych tagów rozumianych przez przeglądarkę-->
+
+    <ng-container *ngIf="selectedUser">
+        <!-- TODO: Dodaj binding wiadomości do użytkownika -->
+        <app-chat-message-list [myId]="getMyId()" [messages]="messagesToUser"></app-chat-message-list>
+
+        <app-chat-new-message-area (sendButtonClicked)="sendMessage($event)"></app-chat-new-message-area>
+    </ng-container>
+
+    <ng-container *ngIf="!selectedUser.user_name">
+      Please select user
+    </ng-container>
+
+
+    <ng-container *ngIf="selectedUser.user_name">
+      <p>
+        {{selectedUser.user_name}}
+      </p>
+      {{selectedUser.user_id}}
+      <!-- TODO: wyswietlenie id wybranego użytkownika -->
+
+    </ng-container>
+
