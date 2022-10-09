@@ -167,12 +167,18 @@ function getUsers(request, response) {
 function getMessages(request, response){
     const user_id = request.session.user_id;
     const target_id = request.params.id;
-    const message_list = [];
+    
+    //const message = [{"message_text": []}]
+    
+    const message = [];
     const messages = Message.findAll({where:{message_from_user_id:user_id, message_to_user_id: target_id}, raw:true}).then(( row ) => {
         row.forEach(element => {
-            message_list.push(element.message_text);
+            const allMessages = {message_text: element.message_text}
+            message.push(allMessages);
+            
+            //message[0]['message_text'].push(element.message_text);
         })
-        response.send({data: message_list});
+        response.send({data: message});
     }) 
 }
 
