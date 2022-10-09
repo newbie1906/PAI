@@ -1,0 +1,38 @@
+<html>
+    <head></head>
+    <body>
+        <form action="/">
+            <input type='submit' value="Strona główna"> 
+        </form>
+
+
+        <table>
+            <thead>
+               <td>Id</td>
+               <td>Username</td>
+               <td>Password</td>
+               <td>Admin</td>
+            </thead>
+            
+            {% for user in users %}
+               <tr>
+                  <td><a href="/users/{{user[0]}}">{{user[0]}}</a></td>
+                  <td><a href="/users/{{user[1]}}">{{user[1]}}</a></td>
+                  <td>{{user[2]}}</td>
+                  <td>{{user[3]}}</td>
+               </tr>
+            {% endfor %}
+         </table>
+
+        <h1>Dodaj użytkownika</h1>
+        {% if message is defined %}
+        <h2> {{message}}</h2>
+        {% endif %}
+        <form method=post action="/register">
+            Nazwa użytkownika: <input type=text name=username>
+            Hasło: <input type=password name=password>
+            Admin: <input type="checkbox" name="isAdmin">
+            <input type=submit>
+        </form>
+    </body>
+</html>
