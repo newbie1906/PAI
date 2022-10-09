@@ -4,6 +4,7 @@ import { HttpService } from '../http.service';
 import { User } from '../user';
 import { Message } from '../message';
 import { DataApiResponse } from '../api-response';
+import { MessageWSService } from '../message-ws.service';
 
 @Component({
   selector: 'app-chat',
@@ -25,6 +26,7 @@ export class ChatComponent {
   constructor(
     private router: Router,
     private httpService: HttpService,
+    private messageWSService: MessageWSService,
   ) {
     // Sprawdzenie czy uzytkownik nie jest zalogowany, jezeli tak - przejscie do głownego panelu
     if (!httpService.isLogin) {
@@ -33,6 +35,12 @@ export class ChatComponent {
   }
 
   ngOnInit() {
+    this.messageWSService.onAnotherUserConneted.subscribe(()=>{
+      this.reloadUsers();
+    });
+    this.messageWSService.onMessage.subscribe(() =>{
+      this.getMessagesWithSelectedUser();
+    });
     this.reloadUsers();
   }
 

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginApiResponse } from '../api-response';
 import { HttpService } from '../http.service';
+import { MessageWSService } from '../message-ws.service';
 import { User } from '../user';
 
 
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private httpService: HttpService,
+    private MessageWSService: MessageWSService
   ) {
     // Sprawdzenie czy uzytkownik nie jest zalogowany, jezeli tak - przejscie do głownego panelu
     if (httpService.isLogin) {
@@ -65,6 +67,7 @@ export class LoginComponent implements OnInit {
           if (data.hasOwnProperty("loggedin")) {
             let responseData = data as LoginApiResponse;
             if (responseData.loggedin === true) {
+              this.MessageWSService.open();
               // Zapisanie informacji o tym, że udało się zalogować użytkownika oraz jego dane
               this.httpService.isLogin = true;
               this.httpService.user = new User(responseData.user_id, responseData.user_name, "");
