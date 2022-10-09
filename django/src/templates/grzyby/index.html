@@ -1,0 +1,28 @@
+<html>
+<body>
+    <h1>SPIS GRZYBÓW</h1>
+    <div>
+        {% if user.is_authenticated %}
+        <a href="/logout">Wyloguj</a>
+        {% endif %}
+    </div>
+    <div>        
+        <a href="{% url 'grzyby_add' %}">Dodaj swój okaz ;)</a>
+
+    </div>
+    <hr>
+    {% for grzyb in grzyby %}
+    <div>
+        <ul>Nazwa grzyba: {{grzyb.nameOfShroom}}</ul>
+        <ul>Opis grzyba: {{grzyb.descriptionOfShroom}}</ul>
+        <ul>Dumny zbieracz: {{grzyb.picker}}</ul>
+        <ul>Waga grzyba (wcale nie zawyżona nie jesteśmy wędkarzami): {{grzyb.weightOfShroom}} kg</ul>
+        <ul>Godzina dodania: {{grzyb.create_time}}</ul>
+        <a href="{% url 'grzyby_update' grzyb.id %}">Aktualizuj</a>
+        <a href="{% url 'grzyby_delete' grzyb.id %}">Usuń grzyba ;-;</a>
+    </div>
+    <hr>
+    {% endfor %}
+    
+</body>
+</html>
